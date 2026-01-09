@@ -1,0 +1,14 @@
+﻿# JetBrains Rider / IntelliJ
+.idea/
+
+# .NET build output
+bin/
+obj/
+
+# User-specific
+*.user
+*.suo
+
+# OS
+Thumbs.db
+.DS_Store
