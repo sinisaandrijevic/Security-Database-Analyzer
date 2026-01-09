@@ -21,9 +21,11 @@
                 <Button Content="Open Database"
                         Width="140"
                         Height="34"
-                        Margin="0,0,16,0" />
+                        Margin="0,0,16,0"
+                        Click="OpenDatabase_Click" />
 
-                <TextBlock Text="No database loaded"
+                <TextBlock x:Name="StatusTextBlock"
+                           Text="No database loaded"
                            VerticalAlignment="Center"
                            Opacity="0.8" />
             </DockPanel>
