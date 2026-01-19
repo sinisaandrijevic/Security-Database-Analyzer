@@ -10,5 +10,9 @@ MainWindow.xaml.cs - logika
 UserReadRepository.cs - čita podatke o korisnicima koje potom prikazujemo na Dashboardu
 LoginEventReadRepository.cs - čita activity log
 
+Testirajte aplikaciju tako što ćete uneti sledeće komande u terminal: 
+
 > dotnet build
 > dotnet run --project SecurityDatabaseAnalyzer
+
+Nakon toga importujte testnu bazu podataka (test.db) pritiskom na +

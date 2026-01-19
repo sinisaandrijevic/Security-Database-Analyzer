@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SecurityDatabaseAnalyzer.Models;
+﻿namespace SecurityDatabaseAnalyzer.Models;
 
 public class LoginEventRecord
 {
@@ -9,4 +7,5 @@ public class LoginEventRecord
     public string Mode { get; init; } = string.Empty;
     public string Reason { get; init; } = string.Empty;
     public DateTime OccurredAt { get; init; }
+    public bool IsHighRisk { get; init; }
 }

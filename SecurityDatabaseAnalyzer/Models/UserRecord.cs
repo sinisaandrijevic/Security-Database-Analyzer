@@ -7,4 +7,5 @@ public class UserRecord
     public int FailedAttempts { get; init; }
     public bool Locked { get; init; }
     public string CreatedAt { get; init; } = string.Empty;
+    public bool IsHighRiskUser { get; set; }
 }

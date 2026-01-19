@@ -1,7 +1,5 @@
 ﻿using Microsoft.Win32;
 using Microsoft.Data.Sqlite;
-using System.IO;
-using System.Linq;
 using System.Windows;
 using SecurityDatabaseAnalyzer.Database;
 using SecurityDatabaseAnalyzer.Models;
@@ -20,21 +18,50 @@ public partial class MainWindow : Window
     private List<LoginEventRecord> _allLoginEvents = new();
     private string _lastDatabasePath = null;
 
+    private void MarkHighRiskUsers()
+    {
+        if (_allUsers == null || _allLoginEvents == null)
+            return;
+
+        // usernames that appear in login events but NOT in users table
+        var suspiciousUsernames = _allLoginEvents
+            .Where(IsSuspiciousLoginEvent)
+            .Select(e => e.Username)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var user in _allUsers)
+        {
+            user.IsHighRiskUser = suspiciousUsernames.Contains(user.Username);
+        }
+    }
+
     // Helper for suspicious login event detection
     private bool IsSuspiciousLoginEvent(LoginEventRecord ev)
     {
-        // If username does not exist in _allUsers, it's highly suspicious
-        bool userExists = _allUsers.Any(u => u.Username.Equals(ev.Username, StringComparison.OrdinalIgnoreCase));
+        // Username not in user database  
+        bool userExists = _allUsers.Any(u =>
+            u.Username.Equals(ev.Username, StringComparison.OrdinalIgnoreCase));
+
         if (!userExists)
             return true;
 
-        // Check for weird strings (basic SQLi patterns)
-        if (!string.IsNullOrEmpty(ev.Reason))
+        // SQL injection patterns
+        if (!string.IsNullOrWhiteSpace(ev.Reason))
         {
-            string reason = ev.Reason.ToLower();
-            if (reason.Contains("sql_injection_possible") || reason.Contains("' or 1=1") || reason.Contains("--") || reason.Contains("/*") || reason.Contains("union select"))
+            string reason = ev.Reason.ToLowerInvariant();
+
+            if (
+                reason.Contains("' or 1=1") ||
+                reason.Contains("--") ||
+                reason.Contains("/*") ||
+                reason.Contains("union select")
+            )
+            {
                 return true;
+            }
         }
+
         return false;
     }
 
@@ -68,6 +95,7 @@ public partial class MainWindow : Window
                             _allUsers[idx] = unlockedUser;
                             UsersDataGrid.ItemsSource = null;
                             UsersDataGrid.ItemsSource = _allUsers;
+                            UpdateLockedUsersCount();
                         }
                         MessageBox.Show($"User '{user.Username}' unlocked and saved to database.", "Unlock User", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -84,9 +112,24 @@ public partial class MainWindow : Window
         }
     }
 
+    // Refresh locked users KPI
+    private void UpdateLockedUsersCount()
+    {
+        var lockedUsers = _allUsers.Count(u => u.Locked);
+        LockedUsersText.Text = $"Locked users: {lockedUsers}";
+    }
+
     public MainWindow()
     {
         InitializeComponent();
+        // Attach click handler to LockedUsersText
+        LockedUsersText.MouseLeftButtonUp += LockedUsersText_MouseLeftButtonUp;
+    }
+
+    // Handler for clicking the Locked Users KPI
+    private void LockedUsersText_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        UpdateLockedUsersCount();
     }
 
     // Poziva se klikom na dugme "Open Database"
@@ -122,7 +165,13 @@ public partial class MainWindow : Window
             // ===================== LOGIN EVENTS =====================
             LoadLoginEventsSafe(connection);
 
-            // Count high-risk login events (failed and suspicious) AFTER loading events
+            MarkHighRiskUsers();
+
+            // refresh users grid so row styles re-evaluate
+            UsersDataGrid.ItemsSource = null;
+            UsersDataGrid.ItemsSource = _allUsers;
+
+            // Count high-risk login events
             var highRiskLogins = _allLoginEvents.Count(ev => IsSuspiciousLoginEvent(ev));
             HighRiskUsersText.Text = $"High-risk logins: {highRiskLogins}";
 
@@ -142,7 +191,6 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// Učitava login_events ako tabela postoji.
-    /// Ako ne postoji – tiho ignoriše (stare baze).
     /// </summary>
     private void LoadLoginEventsSafe(SqliteConnection connection)
     {
@@ -151,17 +199,20 @@ public partial class MainWindow : Window
             var loginEvents = LoginEventReadRepository.LoadLoginEvents(connection);
             // Mark suspicious events by creating new records if needed
             var processedEvents = loginEvents.Select(ev =>
-                IsSuspiciousLoginEvent(ev)
-                    ? new LoginEventRecord
-                    {
-                        Username = ev.Username,
-                        Success = ev.Success,
-                        Mode = ev.Mode,
-                        Reason = "sql_injection_possible",
-                        OccurredAt = ev.OccurredAt
-                    }
-                    : ev
-            ).ToList();
+            {
+                bool suspicious = IsSuspiciousLoginEvent(ev);
+
+                return new LoginEventRecord
+                {
+                    Username = ev.Username,
+                    Success = ev.Success,
+                    Mode = ev.Mode,
+                    Reason = suspicious ? "sql_injection_possible" : ev.Reason,
+                    OccurredAt = ev.OccurredAt,
+                    IsHighRisk = suspicious
+                };
+            }).ToList();
+
             _allLoginEvents = processedEvents;
             LoginEventsDataGrid.ItemsSource = _allLoginEvents;
 

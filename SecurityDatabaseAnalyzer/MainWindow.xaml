@@ -12,6 +12,26 @@
         Background="{DynamicResource AppBg}">
 
     <Window.Resources>
+
+        <!-- ===================== ICON GEOMETRIES ===================== -->
+
+        <!-- Locked padlock icon -->
+        <Geometry x:Key="LockClosedIcon">
+            M12,10 H6 V7 C6,4.8 7.8,3 10,3
+    C12.2,3 14,4.8 14,7 V10
+    H16 V18 H4 V10 Z
+        </Geometry>
+
+        <!-- Unlocked padlock icon -->
+        <Geometry x:Key="LockOpenIcon">
+            M12,10 H6 V7 C6,4.8 7.8,3 10,3
+    C11.3,3 12.5,3.6 13.2,4.5
+    L12,5.5 C11.6,5 10.9,4.7 10,4.7
+    C8.6,4.7 7.5,5.8 7.5,7 V10
+    H16 V18 H4 V10 Z
+        </Geometry>
+
+
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
         <!-- ===================== THEME ===================== -->
@@ -368,15 +388,14 @@
                                 Value="Center"/>
                         <Setter Property="Background"
                                 Value="Transparent"/>
-
                         <Style.Triggers>
                             <Trigger Property="IsSelected"
-                                    Value="True">
+                                     Value="True">
                                 <Setter Property="Background"
                                         Value="#442DD4BF"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver"
-                                    Value="True">
+                                     Value="True">
                                 <Setter Property="Background"
                                         Value="#222DD4BF"/>
                             </Trigger>
@@ -395,27 +414,30 @@
                     Value="0"/>
             <Setter Property="Background"
                     Value="{Binding RelativeSource={RelativeSource Self}, Path=(DataGrid.RowBackground)}"/>
+
             <Style.Triggers>
-                <!-- Locked = red tint -->
+
+                <!-- Locked = red -->
                 <DataTrigger Binding="{Binding Locked}"
                              Value="True">
                     <Setter Property="Background"
                             Value="{StaticResource TintLocked}"/>
                 </DataTrigger>
 
-                <!-- High failed attempts = amber tint (tune threshold later in VM; for now >= 5) -->
-                <DataTrigger Binding="{Binding FailedAttempts}"
-                             Value="5">
+                <!-- High-risk user = yellow -->
+                <DataTrigger Binding="{Binding IsHighRiskUser}"
+                             Value="True">
                     <Setter Property="Background"
                             Value="{StaticResource TintWarn}"/>
                 </DataTrigger>
 
-                <!-- Selected still wins -->
+                <!-- Selection wins -->
                 <Trigger Property="IsSelected"
                          Value="True">
                     <Setter Property="Background"
                             Value="#332DD4BF"/>
                 </Trigger>
+
             </Style.Triggers>
         </Style>
 
@@ -442,9 +464,8 @@
                             Value="{StaticResource TintDemo}"/>
                 </DataTrigger>
 
-                <!-- Suspicious reason (simple keyword match; can be replaced by a boolean in ViewModel later) -->
-                <DataTrigger Binding="{Binding Reason}"
-                             Value="sql_injection_possible">
+                <DataTrigger Binding="{Binding IsHighRisk}"
+                             Value="True">
                     <Setter Property="Background"
                             Value="{StaticResource TintWarn}"/>
                 </DataTrigger>
@@ -785,18 +806,75 @@
                                                             Binding="{Binding CreatedAt}"
                                                             Width="170"
                                                             ElementStyle="{StaticResource Caption}"/>
-                                        <DataGridTemplateColumn Header="Unlock"
-                                                                Width="110">
+                                        <DataGridTemplateColumn Header="Lock"
+                                                                Width="70">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Button Content="Unlock"
-                                                            IsEnabled="{Binding Locked}"
-                                                            Click="UnlockUser_Click"
-                                                            Style="{StaticResource PrimaryButton}"
-                                                            Padding="8,2"
-                                                            FontSize="13"
-                                                            HorizontalAlignment="Center"
-                                                            MinWidth="70"/>
+                                                    <Button Click="UnlockUser_Click"
+                                                            Padding="0">
+
+                                                        <Button.Style>
+                                                            <Style TargetType="Button">
+                                                                <!-- remove button visuals -->
+                                                                <Setter Property="Background"
+                                                                        Value="Transparent"/>
+                                                                <Setter Property="BorderThickness"
+                                                                        Value="0"/>
+                                                                <Setter Property="Cursor"
+                                                                        Value="Arrow"/>
+                                                                <Setter Property="IsEnabled"
+                                                                        Value="False"/>
+                                                                <Setter Property="OverridesDefaultStyle"
+                                                                        Value="True"/>
+
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="Button">
+                                                                            <ContentPresenter
+                                                                                HorizontalAlignment="Center"
+                                                                                VerticalAlignment="Center"/>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+
+                                                                <!-- clickable only when locked -->
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Locked}"
+                                                                                 Value="True">
+                                                                        <Setter Property="IsEnabled"
+                                                                                Value="True"/>
+                                                                        <Setter Property="Cursor"
+                                                                                Value="Hand"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Button.Style>
+
+                                                        <TextBlock FontSize="18"
+                                                                   FontFamily="Segoe UI Emoji">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <!-- UNLOCKED -->
+                                                                    <Setter Property="Text"
+                                                                            Value="🔓"/>
+                                                                    <Setter Property="Foreground"
+                                                                            Value="{StaticResource TextDimBrush}"/>
+
+                                                                    <!-- LOCKED -->
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Locked}"
+                                                                                     Value="True">
+                                                                            <Setter Property="Text"
+                                                                                    Value="🔒"/>
+                                                                            <Setter Property="Foreground"
+                                                                                    Value="White"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+
+                                                    </Button>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -961,7 +1039,9 @@
                                                    Text="—"
                                                    Foreground="{StaticResource DangerBrush}"
                                                    FontSize="20"
-                                                   FontWeight="SemiBold"/>
+                                                   FontWeight="SemiBold"
+                                                   Cursor="Hand"
+                                                   MouseLeftButtonUp="LockedUsersText_MouseLeftButtonUp"/>
                                     </StackPanel>
                                 </Border>
 
