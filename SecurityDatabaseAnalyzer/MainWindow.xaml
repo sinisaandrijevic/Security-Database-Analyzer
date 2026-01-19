@@ -5,177 +5,724 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Security Database Analyzer"
-        Height="720"
-        Width="1200"
-        WindowStartupLocation="CenterScreen">
+        Height="820"
+        Width="1320"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBg}">
 
-    <DockPanel Margin="12">
+    <Window.Resources>
 
-        <!-- ===================== TOP BAR ===================== -->
-        <Border DockPanel.Dock="Top"
-                Padding="10"
-                Background="#F3F3F3"
-                BorderBrush="#DDDDDD"
-                BorderThickness="0,0,0,1">
-            <DockPanel>
+        <!-- ===================== THEME ===================== -->
+        <Color x:Key="C_AppBg">#FF0B1020</Color>
+        <Color x:Key="C_Surface">#FF0F1730</Color>
+        <Color x:Key="C_Surface2">#FF121C3A</Color>
+        <Color x:Key="C_Border">#FF263255</Color>
 
-                <Button Content="Open Database"
-                        Width="140"
-                        Height="34"
-                        Margin="0,0,16,0"
-                        Click="OpenDatabase_Click" />
+        <Color x:Key="C_Text">#FFE8EEFF</Color>
+        <Color x:Key="C_TextMuted">#FFB7C0DD</Color>
+        <Color x:Key="C_TextDim">#FF8F9BBE</Color>
 
-                <TextBlock x:Name="StatusTextBlock"
-                           Text="No database loaded"
-                           VerticalAlignment="Center"
-                           Foreground="#555555" />
-            </DockPanel>
+        <Color x:Key="C_Accent">#FF2DD4BF</Color>    
+        <Color x:Key="C_Accent2">#FF8B5CF6</Color>   
+        <Color x:Key="C_Warn">#FFFBBF24</Color>     
+        <Color x:Key="C_Danger">#FFF87171</Color>    
+        <Color x:Key="C_Ok">#FF34D399</Color>         
+
+        <SolidColorBrush x:Key="AppBg" Color="{StaticResource C_AppBg}" />
+        <SolidColorBrush x:Key="Surface" Color="{StaticResource C_Surface}" />
+        <SolidColorBrush x:Key="Surface2" Color="{StaticResource C_Surface2}" />
+        <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource C_Border}" />
+
+        <SolidColorBrush x:Key="TextBrush" Color="{StaticResource C_Text}" />
+        <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource C_TextMuted}" />
+        <SolidColorBrush x:Key="TextDimBrush" Color="{StaticResource C_TextDim}" />
+
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource C_Accent}" />
+        <SolidColorBrush x:Key="Accent2Brush" Color="{StaticResource C_Accent2}" />
+        <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource C_Warn}" />
+        <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource C_Danger}" />
+        <SolidColorBrush x:Key="OkBrush" Color="{StaticResource C_Ok}" />
+
+        <!-- Tints for row highlighting -->
+        <SolidColorBrush x:Key="TintLocked" Color="#33F87171" />
+        <SolidColorBrush x:Key="TintWarn" Color="#33FBBF24" />
+        <SolidColorBrush x:Key="TintDemo" Color="#338B5CF6" />
+        <SolidColorBrush x:Key="TintFail" Color="#33F87171" />
+
+        <CornerRadius x:Key="CardRadius">14</CornerRadius>
+
+        <!-- ===================== TYPOGRAPHY ===================== -->
+        <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
+
+        <Style x:Key="H1" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        </Style>
+
+        <Style x:Key="H2" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        </Style>
+
+        <Style x:Key="Body" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        </Style>
+
+        <Style x:Key="Caption" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+        </Style>
+
+        <!-- ===================== CARDS / PANELS ===================== -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Surface}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource CardRadius}" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="CardHeaderRow" TargetType="DockPanel">
+            <Setter Property="LastChildFill" Value="True" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <!-- ===================== BUTTONS ===================== -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Foreground" Value="#FF001014" />
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.92" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="Background" Value="{StaticResource Surface2}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.92" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ===================== TEXTBOXES ===================== -->
+        <Style x:Key="SearchBox" TargetType="TextBox">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="Background" Value="{StaticResource Surface2}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Chip" TargetType="Border">
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="Background" Value="{StaticResource Surface2}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <!-- ===================== DATA GRID BASE STYLE ===================== -->
+        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="Background" Value="{StaticResource Surface}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+
+            <Setter Property="RowBackground" Value="#FF0F1730" />
+            <Setter Property="AlternatingRowBackground" Value="#FF101A36" />
+
+            <Setter Property="GridLinesVisibility" Value="None" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserResizeRows" Value="False" />
+            <Setter Property="CanUserSortColumns" Value="True" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+            <Setter Property="RowHeaderWidth" Value="0" />
+
+            <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="VerticalGridLinesBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF0C1328" />
+                        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        <Setter Property="Padding" Value="10,10" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Padding" Value="10,8" />
+                        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#332DD4BF" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ===================== USERS ROW STYLE (Locked / High Risk) ===================== -->
+        <Style x:Key="UsersRowStyle" TargetType="DataGridRow">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background"
+                    Value="{Binding RelativeSource={RelativeSource Self}, Path=(DataGrid.RowBackground)}" />
+            <Style.Triggers>
+                <!-- Locked = red tint -->
+                <DataTrigger Binding="{Binding Locked}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource TintLocked}" />
+                </DataTrigger>
+
+                <!-- High failed attempts = amber tint (tune threshold later in VM; for now >= 5) -->
+                <DataTrigger Binding="{Binding FailedAttempts}" Value="5">
+                    <Setter Property="Background" Value="{StaticResource TintWarn}" />
+                </DataTrigger>
+
+                <!-- Selected still wins -->
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#332DD4BF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ===================== LOGIN EVENTS ROW STYLE (Fail / Demo / Suspicious) ===================== -->
+        <Style x:Key="LoginEventsRowStyle" TargetType="DataGridRow">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Style.Triggers>
+
+                <!-- Failed -->
+                <DataTrigger Binding="{Binding Success}" Value="False">
+                    <Setter Property="Background" Value="{StaticResource TintFail}" />
+                </DataTrigger>
+
+                <!-- Demo mode -->
+                <DataTrigger Binding="{Binding Mode}" Value="demo">
+                    <Setter Property="Background" Value="{StaticResource TintDemo}" />
+                </DataTrigger>
+
+                <!-- Suspicious reason (simple keyword match; can be replaced by a boolean in ViewModel later) -->
+                <DataTrigger Binding="{Binding Reason}" Value="sql_injection_possible">
+                    <Setter Property="Background" Value="{StaticResource TintWarn}" />
+                </DataTrigger>
+
+                <!-- Selected still wins -->
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#332DD4BF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ===================== TAB CONTROL ===================== -->
+        <Style x:Key="ModernTabControl" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style x:Key="ModernTabItem" TargetType="TabItem">
+            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter ContentSource="Header"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                                <Setter Property="Background" Value="{StaticResource Surface2}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.92" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <DockPanel Margin="16">
+
+        <!-- ===================== TOP APP BAR ===================== -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Padding="14" Margin="0,0,0,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Title + status -->
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Security Database Analyzer" Style="{StaticResource H1}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <Border Style="{StaticResource Chip}" Margin="0,0,10,0">
+                            <TextBlock Text="ANALYZER MODE • READ-ONLY" Foreground="{StaticResource OkBrush}"
+                                       FontSize="11" FontWeight="SemiBold" />
+                        </Border>
+
+                        <TextBlock x:Name="StatusTextBlock"
+                                   Text="No database loaded"
+                                   Style="{StaticResource Caption}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Actions -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Open Database"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,0,10,0"
+                            Click="OpenDatabase_Click" />
+
+                    <!-- Placeholder for future: export / refresh -->
+                    <Button Content="Refresh"
+                            Style="{StaticResource GhostButton}"
+                            Margin="0,0,10,0"
+                            IsEnabled="False" />
+
+                    <!-- Admin toggle placeholder (wired in Step 7+) -->
+                    <Border Style="{StaticResource Chip}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Admin Mode"
+                                       Foreground="{StaticResource TextMutedBrush}"
+                                       FontSize="11"
+                                       VerticalAlignment="Center" />
+                            <CheckBox x:Name="AdminModeCheckBox"
+                                      Margin="10,0,0,0"
+                                      VerticalAlignment="Center"
+                                      IsEnabled="False"
+                                      ToolTip="Admin mode is implemented in the next step (explicit confirmation, audit log)." />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- ===================== MAIN CONTENT ===================== -->
+        <!-- ===================== MAIN LAYOUT ===================== -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3.2*" />
+                <ColumnDefinition Width="1.8*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <!-- ===================== LEFT: USERS + LOGIN EVENTS ===================== -->
-            <StackPanel Grid.Column="0">
+            <!-- ===================== LEFT: DATA (TABS) ===================== -->
+            <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,14,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                <!-- USERS TABLE -->
-                <Border Padding="10"
-                        Margin="0,0,8,8"
-                        BorderBrush="#DDDDDD"
-                        BorderThickness="1"
-                        CornerRadius="6">
+                    <!-- Tabs header -->
+                    <DockPanel Grid.Row="0" Style="{StaticResource CardHeaderRow}">
+                        <TextBlock Text="Data"
+                                   Style="{StaticResource H2}"
+                                   DockPanel.Dock="Left" />
 
-                    <DockPanel>
-                        <TextBlock Text="USERS"
-                                   FontSize="16"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,10" />
-
-                        <DataGrid x:Name="UsersDataGrid"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True"
-                                  CanUserAddRows="False"
-                                  HeadersVisibility="Column"
-                                  GridLinesVisibility="Horizontal"
-                                  RowBackground="#FAFAFA"
-                                  AlternatingRowBackground="#F1F1F1">
-
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Username"
-                                                    Binding="{Binding Username}"
-                                                    Width="*" />
-
-                                <DataGridTextColumn Header="Failed Attempts"
-                                                    Binding="{Binding FailedAttempts}"
-                                                    Width="150" />
-
-                                <DataGridCheckBoxColumn Header="Locked"
-                                                        Binding="{Binding Locked}"
-                                                        Width="80" />
-
-                                <DataGridTextColumn Header="Created At"
-                                                    Binding="{Binding CreatedAt}"
-                                                    Width="160" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <!-- Quick actions placeholder -->
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <Border Style="{StaticResource Chip}" Margin="0,0,10,0">
+                                <TextBlock Text="Tip: Use the search to quickly find users/events."
+                                           Style="{StaticResource Caption}" />
+                            </Border>
+                        </StackPanel>
                     </DockPanel>
+
+                    <!-- Filters row -->
+                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Search box placeholder (wire in MVVM later) -->
+                        <TextBox Style="{StaticResource SearchBox}"
+                                 Grid.Column="0"
+                                 Text=""
+                                 ToolTip="Search will be wired in MVVM step (filters users/events by username/reason)." />
+                        <!-- Note: PlaceholderText is not native WPF; keeping empty to avoid errors -->
+                    </Grid>
+
+                    <!-- TabControl -->
+                    <TabControl Grid.Row="2" Style="{StaticResource ModernTabControl}">
+                        <TabControl.ItemContainerStyle>
+                            <Style TargetType="TabItem" BasedOn="{StaticResource ModernTabItem}" />
+                        </TabControl.ItemContainerStyle>
+
+                        <!-- USERS TAB -->
+                        <TabItem Header="Users">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <DockPanel Margin="0,0,0,10">
+                                    <TextBlock Text="Users table (read-only)"
+                                               Style="{StaticResource Caption}" />
+                                </DockPanel>
+
+                                <DataGrid x:Name="UsersDataGrid"
+                                          Grid.Row="1"
+                                          Style="{StaticResource ModernDataGrid}"
+                                          RowStyle="{StaticResource UsersRowStyle}"
+                                          AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*" />
+                                        <DataGridTextColumn Header="Failed Attempts" Binding="{Binding FailedAttempts}"
+                                                            Width="150" />
+                                        <DataGridCheckBoxColumn Header="Locked" Binding="{Binding Locked}" Width="90" />
+                                        <DataGridTextColumn Header="Created At" Binding="{Binding CreatedAt}"
+                                                            Width="180" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- LOGIN EVENTS TAB -->
+                        <TabItem Header="Login Events">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <DockPanel Margin="0,0,0,10">
+                                    <TextBlock Text="Authentication timeline (read-only)"
+                                               Style="{StaticResource Caption}" />
+                                </DockPanel>
+
+                                <DataGrid x:Name="LoginEventsDataGrid"
+                                          Grid.Row="1"
+                                          Style="{StaticResource ModernDataGrid}"
+                                          RowStyle="{StaticResource LoginEventsRowStyle}"
+                                          AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*" />
+                                        <DataGridCheckBoxColumn Header="Success" Binding="{Binding Success}" Width="90" />
+                                        <DataGridTextColumn Header="Mode" Binding="{Binding Mode}" Width="120" />
+                                        <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" Width="260" />
+                                        <DataGridTextColumn Header="Timestamp (UTC)" Binding="{Binding OccurredAt}"
+                                                            Width="190" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+
+                    </TabControl>
+                </Grid>
+            </Border>
+
+            <!-- ===================== RIGHT: SECURITY INSIGHTS ===================== -->
+            <StackPanel Grid.Column="1" Orientation="Vertical">
+
+                <!-- ===================== SECURITY INSIGHTS ===================== -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+
+                        <!-- Header -->
+                        <DockPanel Style="{StaticResource CardHeaderRow}">
+                            <TextBlock Text="Security Insights"
+                                       Style="{StaticResource H2}" />
+
+                            <Border DockPanel.Dock="Right"
+                                    Style="{StaticResource Chip}">
+                                <TextBlock Text="Defensive • Educational"
+                                           Style="{StaticResource Caption}" />
+                            </Border>
+                        </DockPanel>
+
+                        <!-- Content -->
+                        <StackPanel>
+
+                            <!-- KPI tiles -->
+                            <UniformGrid Columns="2" Margin="0,4,0,0">
+
+                                <Border Style="{StaticResource Card}"
+                                        Background="{StaticResource Surface2}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="12"
+                                        Margin="0,0,10,10">
+                                    <StackPanel>
+                                        <TextBlock Text="Total Users"
+                                                   Style="{StaticResource Caption}" />
+                                        <TextBlock x:Name="TotalUsersText"
+                                                   Text="—"
+                                                   Foreground="{StaticResource TextBrush}"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}"
+                                        Background="{StaticResource Surface2}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="12"
+                                        Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="Locked Users"
+                                                   Style="{StaticResource Caption}" />
+                                        <TextBlock x:Name="LockedUsersText"
+                                                   Text="—"
+                                                   Foreground="{StaticResource DangerBrush}"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}"
+                                        Background="{StaticResource Surface2}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="12"
+                                        Margin="0,0,10,0">
+                                    <StackPanel>
+                                        <TextBlock Text="High-Risk Users"
+                                                   Style="{StaticResource Caption}" />
+                                        <TextBlock x:Name="HighRiskUsersText"
+                                                   Text="—"
+                                                   Foreground="{StaticResource WarnBrush}"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}"
+                                        Background="{StaticResource Surface2}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="12">
+                                    <StackPanel>
+                                        <TextBlock Text="Analyzer Mode"
+                                                   Style="{StaticResource Caption}" />
+                                        <TextBlock Text="READ-ONLY"
+                                                   Foreground="{StaticResource OkBrush}"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold" />
+                                    </StackPanel>
+                                </Border>
+
+                            </UniformGrid>
+
+                            <Separator Margin="0,14"
+                                       Background="{StaticResource BorderBrush}" />
+
+                            <!-- Notes -->
+                            <TextBlock Text="What to look for"
+                                       Style="{StaticResource H2}"
+                                       Margin="0,0,0,8" />
+
+                            <StackPanel>
+                                <TextBlock Text="• Locked accounts can indicate sustained brute-force attempts."
+                                           Style="{StaticResource Body}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,6" />
+
+                                <TextBlock Text="• High failed_attempts deserve review (possible password spraying)."
+                                           Style="{StaticResource Body}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,6" />
+
+                                <TextBlock
+                                    Text="• Demo logins or 'sql_injection_possible' events indicate testing activity (educational/demo mode)."
+                                    Style="{StaticResource Body}"
+                                    TextWrapping="Wrap"
+                                    Margin="0,0,0,6" />
+
+                                <TextBlock
+                                    Text="• Use Admin Mode only to unlock users or reset failed attempts (audit logged)."
+                                    Style="{StaticResource Body}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </StackPanel>
                 </Border>
 
-                <!-- LOGIN EVENTS TABLE -->
-                <Border Padding="10"
-                        Margin="0,0,8,0"
-                        BorderBrush="#DDDDDD"
-                        BorderThickness="1"
-                        CornerRadius="6">
+                <!-- ===================== LEGEND ===================== -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
 
-                    <DockPanel>
-                        <TextBlock Text="LOGIN EVENTS"
-                                   FontSize="16"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,10" />
+                        <!-- Header -->
+                        <DockPanel Style="{StaticResource CardHeaderRow}">
+                            <TextBlock Text="Legend"
+                                       Style="{StaticResource H2}" />
+                        </DockPanel>
 
-                        <DataGrid x:Name="LoginEventsDataGrid"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True"
-                                  CanUserAddRows="False"
-                                  HeadersVisibility="Column"
-                                  GridLinesVisibility="Horizontal"
-                                  RowBackground="#FAFAFA"
-                                  AlternatingRowBackground="#F1F1F1">
+                        <!-- Content -->
+                        <StackPanel>
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Username"
-                                                    Binding="{Binding Username}"
-                                                    Width="*" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Border Width="16"
+                                        Height="16"
+                                        Background="{StaticResource TintLocked}"
+                                        CornerRadius="4"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1" />
+                                <TextBlock Text=" Locked user row"
+                                           Style="{StaticResource Body}"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
 
-                                <DataGridCheckBoxColumn Header="Success"
-                                                        Binding="{Binding Success}"
-                                                        Width="80" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Border Width="16"
+                                        Height="16"
+                                        Background="{StaticResource TintWarn}"
+                                        CornerRadius="4"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1" />
+                                <TextBlock Text=" High-risk / suspicious indicator"
+                                           Style="{StaticResource Body}"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
 
-                                <DataGridTextColumn Header="Mode"
-                                                    Binding="{Binding Mode}"
-                                                    Width="100" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Border Width="16"
+                                        Height="16"
+                                        Background="{StaticResource TintFail}"
+                                        CornerRadius="4"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1" />
+                                <TextBlock Text=" Failed login event"
+                                           Style="{StaticResource Body}"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
 
-                                <DataGridTextColumn Header="Reason"
-                                                    Binding="{Binding Reason}"
-                                                    Width="220" />
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="16"
+                                        Height="16"
+                                        Background="{StaticResource TintDemo}"
+                                        CornerRadius="4"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1" />
+                                <TextBlock Text=" Demo mode event"
+                                           Style="{StaticResource Body}"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
 
-                                <DataGridTextColumn Header="Timestamp"
-                                                    Binding="{Binding OccurredAt}"
-                                                    Width="180" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DockPanel>
+                        </StackPanel>
+
+                    </StackPanel>
                 </Border>
 
             </StackPanel>
-
-            <!-- ===================== RIGHT: SECURITY INSIGHTS ===================== -->
-            <Border Grid.Column="1"
-                    Padding="10"
-                    Margin="8,0,0,0"
-                    BorderBrush="#DDDDDD"
-                    BorderThickness="1"
-                    CornerRadius="6">
-
-                <StackPanel>
-                    <TextBlock Text="SECURITY INSIGHTS"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Margin="0,0,0,12" />
-
-                    <TextBlock x:Name="TotalUsersText"
-                               Text="Total users: —"
-                               Margin="0,4" />
-
-                    <TextBlock x:Name="LockedUsersText"
-                               Text="Locked users: —"
-                               Margin="0,4" />
-
-                    <TextBlock x:Name="HighRiskUsersText"
-                               Text="High-risk users: —"
-                               Margin="0,4" />
-
-                    <Separator Margin="0,12" />
-
-                    <TextBlock Text="Notes:"
-                               FontWeight="Bold"
-                               Margin="0,0,0,4" />
-
-                    <TextBlock Text="• Locked accounts may indicate brute-force attempts."
-                               TextWrapping="Wrap"
-                               Opacity="0.85" />
-
-                    <TextBlock Text="• Demo-mode logins may indicate SQL injection testing."
-                               TextWrapping="Wrap"
-                               Opacity="0.85"
-                               Margin="0,4,0,0" />
-                </StackPanel>
-            </Border>
 
         </Grid>
 
