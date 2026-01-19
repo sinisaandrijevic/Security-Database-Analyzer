@@ -11,8 +11,14 @@ namespace SecurityDatabaseAnalyzer;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
+
+using System.Collections.Generic;
+
 public partial class MainWindow : Window
 {
+    private List<UserRecord> _allUsers = new();
+    private List<LoginEventRecord> _allLoginEvents = new();
+
     public MainWindow()
     {
         InitializeComponent();
@@ -37,7 +43,8 @@ public partial class MainWindow : Window
 
             // ===================== USERS =====================
             var users = UserReadRepository.LoadUsers(connection);
-            UsersDataGrid.ItemsSource = users.AsEnumerable();
+            _allUsers = users.ToList();
+            UsersDataGrid.ItemsSource = _allUsers;
 
             // ===================== SECURITY INSIGHTS =====================
             TotalUsersText.Text = $"Total users: {users.Count}";
@@ -74,12 +81,42 @@ public partial class MainWindow : Window
         try
         {
             var loginEvents = LoginEventReadRepository.LoadLoginEvents(connection);
-            LoginEventsDataGrid.ItemsSource = loginEvents;
+            _allLoginEvents = loginEvents.ToList();
+            LoginEventsDataGrid.ItemsSource = _allLoginEvents;
         }
         catch (SqliteException)
         {
             // Baza nema login_events tabelu (legacy baza)
+            _allLoginEvents = new List<LoginEventRecord>();
             LoginEventsDataGrid.ItemsSource = null;
+        }
+    }
+
+    private void FilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        var filter = FilterTextBox.Text?.Trim().ToLower() ?? string.Empty;
+
+        // Filter users
+        if (_allUsers != null)
+        {
+            var filteredUsers = string.IsNullOrEmpty(filter)
+                ? _allUsers
+                : _allUsers.Where(u =>
+                    (!string.IsNullOrEmpty(u.Username) && u.Username.ToLower().Contains(filter))
+                ).ToList();
+            UsersDataGrid.ItemsSource = filteredUsers;
+        }
+
+        // Filter login events
+        if (_allLoginEvents != null)
+        {
+            var filteredEvents = string.IsNullOrEmpty(filter)
+                ? _allLoginEvents
+                : _allLoginEvents.Where(ev =>
+                    (!string.IsNullOrEmpty(ev.Username) && ev.Username.ToLower().Contains(filter)) ||
+                    (!string.IsNullOrEmpty(ev.Reason) && ev.Reason.ToLower().Contains(filter))
+                ).ToList();
+            LoginEventsDataGrid.ItemsSource = filteredEvents;
         }
     }
 }

@@ -6,3 +6,6 @@ Dodali smo biblioteku Microsoft.Data.Sqlite kako bismo mogli da koristimo SQLite
 SQLiteReadOnlyService - otvaranje SQLite baze
 
 MainWindow.xaml.cs - logika
+
+UserReadRepository.cs - čita podatke o korisnicima koje potom prikazujemo na Dashboardu
+LoginEventReadRepository.cs - čita activity log
