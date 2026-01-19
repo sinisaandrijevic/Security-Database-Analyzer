@@ -9,3 +9,6 @@ MainWindow.xaml.cs - logika
 
 UserReadRepository.cs - čita podatke o korisnicima koje potom prikazujemo na Dashboardu
 LoginEventReadRepository.cs - čita activity log
+
+> dotnet build
+> dotnet run --project SecurityDatabaseAnalyzer

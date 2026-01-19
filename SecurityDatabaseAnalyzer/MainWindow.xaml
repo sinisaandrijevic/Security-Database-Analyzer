@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SecurityDatabaseAnalyzer"
         mc:Ignorable="d"
         Title="Security Database Analyzer"
         Height="820"
@@ -11,6 +12,7 @@
         Background="{DynamicResource AppBg}">
 
     <Window.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
         <!-- ===================== THEME ===================== -->
         <Color x:Key="C_AppBg">#FF0B1020</Color>
@@ -22,90 +24,144 @@
         <Color x:Key="C_TextMuted">#FFB7C0DD</Color>
         <Color x:Key="C_TextDim">#FF8F9BBE</Color>
 
-        <Color x:Key="C_Accent">#FF2DD4BF</Color>    
-        <Color x:Key="C_Accent2">#FF8B5CF6</Color>   
-        <Color x:Key="C_Warn">#FFFBBF24</Color>     
-        <Color x:Key="C_Danger">#FFF87171</Color>    
-        <Color x:Key="C_Ok">#FF34D399</Color>         
+        <Color x:Key="C_Accent">#FF2DD4BF</Color>
+        <Color x:Key="C_Accent2">#FF8B5CF6</Color>
+        <Color x:Key="C_Warn">#FFFBBF24</Color>
+        <Color x:Key="C_Danger">#FFF87171</Color>
+        <Color x:Key="C_Ok">#FF34D399</Color>
 
-        <SolidColorBrush x:Key="AppBg" Color="{StaticResource C_AppBg}" />
-        <SolidColorBrush x:Key="Surface" Color="{StaticResource C_Surface}" />
-        <SolidColorBrush x:Key="Surface2" Color="{StaticResource C_Surface2}" />
-        <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource C_Border}" />
+        <SolidColorBrush x:Key="AppBg"
+                         Color="{StaticResource C_AppBg}"/>
+        <SolidColorBrush x:Key="Surface"
+                         Color="{StaticResource C_Surface}"/>
+        <SolidColorBrush x:Key="Surface2"
+                         Color="{StaticResource C_Surface2}"/>
+        <SolidColorBrush x:Key="BorderBrush"
+                         Color="{StaticResource C_Border}"/>
 
-        <SolidColorBrush x:Key="TextBrush" Color="{StaticResource C_Text}" />
-        <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource C_TextMuted}" />
-        <SolidColorBrush x:Key="TextDimBrush" Color="{StaticResource C_TextDim}" />
+        <SolidColorBrush x:Key="TextBrush"
+                         Color="{StaticResource C_Text}"/>
+        <SolidColorBrush x:Key="TextMutedBrush"
+                         Color="{StaticResource C_TextMuted}"/>
+        <SolidColorBrush x:Key="TextDimBrush"
+                         Color="{StaticResource C_TextDim}"/>
 
-        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource C_Accent}" />
-        <SolidColorBrush x:Key="Accent2Brush" Color="{StaticResource C_Accent2}" />
-        <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource C_Warn}" />
-        <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource C_Danger}" />
-        <SolidColorBrush x:Key="OkBrush" Color="{StaticResource C_Ok}" />
+        <SolidColorBrush x:Key="AccentBrush"
+                         Color="{StaticResource C_Accent}"/>
+        <SolidColorBrush x:Key="Accent2Brush"
+                         Color="{StaticResource C_Accent2}"/>
+        <SolidColorBrush x:Key="WarnBrush"
+                         Color="{StaticResource C_Warn}"/>
+        <SolidColorBrush x:Key="DangerBrush"
+                         Color="{StaticResource C_Danger}"/>
+        <SolidColorBrush x:Key="OkBrush"
+                         Color="{StaticResource C_Ok}"/>
 
         <!-- Tints for row highlighting -->
-        <SolidColorBrush x:Key="TintLocked" Color="#33F87171" />
-        <SolidColorBrush x:Key="TintWarn" Color="#33FBBF24" />
-        <SolidColorBrush x:Key="TintDemo" Color="#338B5CF6" />
-        <SolidColorBrush x:Key="TintFail" Color="#33F87171" />
+        <SolidColorBrush x:Key="TintLocked"
+                         Color="#33F87171"/>
+        <SolidColorBrush x:Key="TintWarn"
+                         Color="#33FBBF24"/>
+        <SolidColorBrush x:Key="TintDemo"
+                         Color="#338B5CF6"/>
+        <SolidColorBrush x:Key="TintFail"
+                         Color="#33F87171"/>
 
         <CornerRadius x:Key="CardRadius">14</CornerRadius>
 
         <!-- ===================== TYPOGRAPHY ===================== -->
         <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
 
-        <Style x:Key="H1" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Style x:Key="H1"
+               TargetType="TextBlock">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="20"/>
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextBrush}"/>
         </Style>
 
-        <Style x:Key="H2" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Style x:Key="H2"
+               TargetType="TextBlock">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="14"/>
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextBrush}"/>
         </Style>
 
-        <Style x:Key="Body" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        <Style x:Key="Body"
+               TargetType="TextBlock">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="12"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextMutedBrush}"/>
         </Style>
 
-        <Style x:Key="Caption" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+        <Style x:Key="Caption"
+               TargetType="TextBlock">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="11"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextDimBrush}"/>
         </Style>
 
         <!-- ===================== CARDS / PANELS ===================== -->
-        <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource Surface}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{StaticResource CardRadius}" />
-            <Setter Property="Padding" Value="14" />
-            <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Style x:Key="Card"
+               TargetType="Border">
+            <Setter Property="Background"
+                    Value="{StaticResource Surface}"/>
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+            <Setter Property="CornerRadius"
+                    Value="{StaticResource CardRadius}"/>
+            <Setter Property="Padding"
+                    Value="14"/>
+            <Setter Property="SnapsToDevicePixels"
+                    Value="True"/>
         </Style>
 
-        <Style x:Key="CardHeaderRow" TargetType="DockPanel">
-            <Setter Property="LastChildFill" Value="True" />
-            <Setter Property="Margin" Value="0,0,0,10" />
+        <Style x:Key="CardHeaderRow"
+               TargetType="DockPanel">
+            <Setter Property="LastChildFill"
+                    Value="True"/>
+            <Setter Property="Margin"
+                    Value="0,0,0,10"/>
         </Style>
 
         <!-- ===================== BUTTONS ===================== -->
-        <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Padding" Value="14,8" />
-            <Setter Property="Foreground" Value="#FF001014" />
-            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
+        <Style x:Key="PrimaryButton"
+               TargetType="Button">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="12"/>
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+            <Setter Property="Padding"
+                    Value="14,8"/>
+            <Setter Property="Foreground"
+                    Value="#FF001014"/>
+            <Setter Property="Background"
+                    Value="{StaticResource AccentBrush}"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
+            <Setter Property="Cursor"
+                    Value="Hand"/>
+            <Setter Property="HorizontalAlignment"
+                    Value="Left"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -113,14 +169,18 @@
                                 CornerRadius="10"
                                 SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center" />
+                                              VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.92" />
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="0.92"/>
                             </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.45" />
+                            <Trigger Property="IsEnabled"
+                                     Value="False">
+                                <Setter Property="Opacity"
+                                        Value="0.45"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -128,16 +188,26 @@
             </Setter>
         </Style>
 
-        <Style x:Key="GhostButton" TargetType="Button">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-            <Setter Property="Background" Value="{StaticResource Surface2}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Cursor" Value="Hand" />
+        <Style x:Key="GhostButton"
+               TargetType="Button">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="12"/>
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+            <Setter Property="Padding"
+                    Value="12,8"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background"
+                    Value="{StaticResource Surface2}"/>
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+            <Setter Property="Cursor"
+                    Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -147,14 +217,18 @@
                                 CornerRadius="10"
                                 SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center" />
+                                              VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.92" />
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="0.92"/>
                             </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.45" />
+                            <Trigger Property="IsEnabled"
+                                     Value="False">
+                                <Setter Property="Opacity"
+                                        Value="0.45"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -163,16 +237,26 @@
         </Style>
 
         <!-- ===================== TEXTBOXES ===================== -->
-        <Style x:Key="SearchBox" TargetType="TextBox">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-            <Setter Property="Background" Value="{StaticResource Surface2}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="Height" Value="36" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style x:Key="SearchBox"
+               TargetType="TextBox">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="12"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background"
+                    Value="{StaticResource Surface2}"/>
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+            <Setter Property="Padding"
+                    Value="12,8"/>
+            <Setter Property="Height"
+                    Value="36"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -180,72 +264,121 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="10">
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="0"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style x:Key="Chip" TargetType="Border">
-            <Setter Property="CornerRadius" Value="999" />
-            <Setter Property="Padding" Value="10,4" />
-            <Setter Property="Background" Value="{StaticResource Surface2}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
+        <Style x:Key="Chip"
+               TargetType="Border">
+            <Setter Property="CornerRadius"
+                    Value="999"/>
+            <Setter Property="Padding"
+                    Value="10,4"/>
+            <Setter Property="Background"
+                    Value="{StaticResource Surface2}"/>
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
         </Style>
 
         <!-- ===================== DATA GRID BASE STYLE ===================== -->
-        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-            <Setter Property="Background" Value="{StaticResource Surface}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-
-            <Setter Property="RowBackground" Value="#FF0F1730" />
-            <Setter Property="AlternatingRowBackground" Value="#FF101A36" />
-
-            <Setter Property="GridLinesVisibility" Value="None" />
-            <Setter Property="HeadersVisibility" Value="Column" />
-            <Setter Property="CanUserAddRows" Value="False" />
-            <Setter Property="CanUserResizeRows" Value="False" />
-            <Setter Property="CanUserSortColumns" Value="True" />
-            <Setter Property="IsReadOnly" Value="True" />
-            <Setter Property="SelectionMode" Value="Single" />
-            <Setter Property="SelectionUnit" Value="FullRow" />
-            <Setter Property="RowHeaderWidth" Value="0" />
-
-            <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="VerticalGridLinesBrush" Value="{StaticResource BorderBrush}" />
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-
+        <Style x:Key="ModernDataGrid"
+               TargetType="DataGrid">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="13"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background"
+                    Value="{StaticResource Surface}"/>
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+            <Setter Property="RowBackground"
+                    Value="#FF151B2B"/>
+            <Setter Property="AlternatingRowBackground"
+                    Value="#FF19203A"/>
+            <Setter Property="GridLinesVisibility"
+                    Value="None"/>
+            <Setter Property="HeadersVisibility"
+                    Value="Column"/>
+            <Setter Property="CanUserAddRows"
+                    Value="False"/>
+            <Setter Property="CanUserResizeRows"
+                    Value="False"/>
+            <Setter Property="CanUserSortColumns"
+                    Value="True"/>
+            <Setter Property="IsReadOnly"
+                    Value="True"/>
+            <Setter Property="SelectionMode"
+                    Value="Single"/>
+            <Setter Property="SelectionUnit"
+                    Value="FullRow"/>
+            <Setter Property="RowHeaderWidth"
+                    Value="0"/>
+            <Setter Property="HorizontalGridLinesBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="VerticalGridLinesBrush"
+                    Value="{StaticResource BorderBrush}"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
+                    Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+                    Value="Auto"/>
             <Setter Property="ColumnHeaderStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="#FF0C1328" />
-                        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
-                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-                        <Setter Property="BorderThickness" Value="0,0,0,1" />
-                        <Setter Property="Padding" Value="10,10" />
-                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Background"
+                                Value="#FF101A36"/>
+                        <Setter Property="Foreground"
+                                Value="{StaticResource TextMutedBrush}"/>
+                        <Setter Property="BorderBrush"
+                                Value="{StaticResource BorderBrush}"/>
+                        <Setter Property="BorderThickness"
+                                Value="0,0,0,1"/>
+                        <Setter Property="Padding"
+                                Value="14,12"/>
+                        <Setter Property="FontWeight"
+                                Value="SemiBold"/>
+                        <Setter Property="FontSize"
+                                Value="14"/>
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Center"/>
                     </Style>
                 </Setter.Value>
             </Setter>
-
             <Setter Property="CellStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Padding" Value="10,8" />
-                        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness"
+                                Value="0"/>
+                        <Setter Property="Padding"
+                                Value="12,10"/>
+                        <Setter Property="Foreground"
+                                Value="{StaticResource TextBrush}"/>
+                        <Setter Property="VerticalContentAlignment"
+                                Value="Center"/>
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Center"/>
+                        <Setter Property="Background"
+                                Value="Transparent"/>
+
                         <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#332DD4BF" />
+                            <Trigger Property="IsSelected"
+                                    Value="True">
+                                <Setter Property="Background"
+                                        Value="#442DD4BF"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver"
+                                    Value="True">
+                                <Setter Property="Background"
+                                        Value="#222DD4BF"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -254,87 +387,124 @@
         </Style>
 
         <!-- ===================== USERS ROW STYLE (Locked / High Risk) ===================== -->
-        <Style x:Key="UsersRowStyle" TargetType="DataGridRow">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="BorderThickness" Value="0" />
+        <Style x:Key="UsersRowStyle"
+               TargetType="DataGridRow">
+            <Setter Property="SnapsToDevicePixels"
+                    Value="True"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
             <Setter Property="Background"
-                    Value="{Binding RelativeSource={RelativeSource Self}, Path=(DataGrid.RowBackground)}" />
+                    Value="{Binding RelativeSource={RelativeSource Self}, Path=(DataGrid.RowBackground)}"/>
             <Style.Triggers>
                 <!-- Locked = red tint -->
-                <DataTrigger Binding="{Binding Locked}" Value="True">
-                    <Setter Property="Background" Value="{StaticResource TintLocked}" />
+                <DataTrigger Binding="{Binding Locked}"
+                             Value="True">
+                    <Setter Property="Background"
+                            Value="{StaticResource TintLocked}"/>
                 </DataTrigger>
 
                 <!-- High failed attempts = amber tint (tune threshold later in VM; for now >= 5) -->
-                <DataTrigger Binding="{Binding FailedAttempts}" Value="5">
-                    <Setter Property="Background" Value="{StaticResource TintWarn}" />
+                <DataTrigger Binding="{Binding FailedAttempts}"
+                             Value="5">
+                    <Setter Property="Background"
+                            Value="{StaticResource TintWarn}"/>
                 </DataTrigger>
 
                 <!-- Selected still wins -->
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#332DD4BF" />
+                <Trigger Property="IsSelected"
+                         Value="True">
+                    <Setter Property="Background"
+                            Value="#332DD4BF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <!-- ===================== LOGIN EVENTS ROW STYLE (Fail / Demo / Suspicious) ===================== -->
-        <Style x:Key="LoginEventsRowStyle" TargetType="DataGridRow">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="BorderThickness" Value="0" />
+        <Style x:Key="LoginEventsRowStyle"
+               TargetType="DataGridRow">
+            <Setter Property="SnapsToDevicePixels"
+                    Value="True"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
             <Style.Triggers>
 
                 <!-- Failed -->
-                <DataTrigger Binding="{Binding Success}" Value="False">
-                    <Setter Property="Background" Value="{StaticResource TintFail}" />
+                <DataTrigger Binding="{Binding Success}"
+                             Value="False">
+                    <Setter Property="Background"
+                            Value="{StaticResource TintFail}"/>
                 </DataTrigger>
 
                 <!-- Demo mode -->
-                <DataTrigger Binding="{Binding Mode}" Value="demo">
-                    <Setter Property="Background" Value="{StaticResource TintDemo}" />
+                <DataTrigger Binding="{Binding Mode}"
+                             Value="demo">
+                    <Setter Property="Background"
+                            Value="{StaticResource TintDemo}"/>
                 </DataTrigger>
 
                 <!-- Suspicious reason (simple keyword match; can be replaced by a boolean in ViewModel later) -->
-                <DataTrigger Binding="{Binding Reason}" Value="sql_injection_possible">
-                    <Setter Property="Background" Value="{StaticResource TintWarn}" />
+                <DataTrigger Binding="{Binding Reason}"
+                             Value="sql_injection_possible">
+                    <Setter Property="Background"
+                            Value="{StaticResource TintWarn}"/>
                 </DataTrigger>
 
                 <!-- Selected still wins -->
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#332DD4BF" />
+                <Trigger Property="IsSelected"
+                         Value="True">
+                    <Setter Property="Background"
+                            Value="#332DD4BF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <!-- ===================== TAB CONTROL ===================== -->
-        <Style x:Key="ModernTabControl" TargetType="TabControl">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
+        <Style x:Key="ModernTabControl"
+               TargetType="TabControl">
+            <Setter Property="Background"
+                    Value="Transparent"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabControl">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TabPanel Grid.Row="0" IsItemsHost="True" Background="Transparent" Margin="0,0,0,8" />
-                            <ContentPresenter Grid.Row="1" ContentSource="SelectedContent" />
+                            <TabPanel Grid.Row="0"
+                                      IsItemsHost="True"
+                                      Background="Transparent"
+                                      Margin="0,0,0,8"/>
+                            <ContentPresenter Grid.Row="1"
+                                              ContentSource="SelectedContent"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style x:Key="ModernTabItem" TargetType="TabItem">
-            <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
-            <Setter Property="Background" Value="{StaticResource Surface2}" />
-            <Setter Property="Margin" Value="0,0,0,0" />
-            <Setter Property="Padding" Value="0,8" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style x:Key="ModernTabItem"
+               TargetType="TabItem">
+            <Setter Property="FontFamily"
+                    Value="{StaticResource AppFont}"/>
+            <Setter Property="FontSize"
+                    Value="13"/>
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextMutedBrush}"/>
+            <Setter Property="Background"
+                    Value="{StaticResource Surface2}"/>
+            <Setter Property="Margin"
+                    Value="0,0,0,0"/>
+            <Setter Property="Padding"
+                    Value="0,8"/>
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
@@ -346,18 +516,25 @@
                                 MinWidth="0">
                             <ContentPresenter ContentSource="Header"
                                               HorizontalAlignment="Center"
-                                              VerticalAlignment="Center" />
+                                              VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-                                <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Foreground"
+                                        Value="{StaticResource TextBrush}"/>
+                                <Setter Property="Background"
+                                        Value="{StaticResource AccentBrush}"/>
                             </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.92" />
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="0.92"/>
                             </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.45" />
+                            <Trigger Property="IsEnabled"
+                                     Value="False">
+                                <Setter Property="Opacity"
+                                        Value="0.45"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -370,50 +547,70 @@
     <DockPanel Margin="16">
 
         <!-- ===================== TOP APP BAR ===================== -->
-        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Padding="14" Margin="0,0,0,14">
+        <Border DockPanel.Dock="Top"
+                Style="{StaticResource Card}"
+                Padding="14"
+                Margin="0,0,0,14">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Title + status -->
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Security Database Analyzer" Style="{StaticResource H1}" />
-                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                        <TextBlock Text="ANALYZER MODE • READ-ONLY" Foreground="{StaticResource OkBrush}"
-                                   FontSize="11" FontWeight="SemiBold" Margin="0,0,10,0" />
+                    <TextBlock Text="Security Database Analyzer"
+                               Style="{StaticResource H1}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,6,0,0">
+                        <!-- Removed 'ANALYZER MODE' label -->
 
                         <TextBlock x:Name="StatusTextBlock"
                                    Text="No database loaded"
                                    Style="{StaticResource Caption}"
-                                   VerticalAlignment="Center" />
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Actions -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Content="Open Database"
-                            Style="{StaticResource PrimaryButton}"
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <Button Width="44"
+                            Height="44"
+                            Style="{StaticResource GhostButton}"
                             Margin="0,0,10,0"
-                            Padding="32,8"
-                            Click="OpenDatabase_Click" />
+                            Padding="0"
+                            Click="OpenDatabase_Click">
+                        <Viewbox Width="24"
+                                 Height="24">
+                            <Canvas Width="24"
+                                    Height="24">
+                                <Ellipse Width="24"
+                                         Height="24"
+                                         Fill="{StaticResource AccentBrush}"/>
+                                <Rectangle Width="14"
+                                           Height="4"
+                                           Fill="White"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Canvas.Left="5"
+                                           Canvas.Top="10"/>
+                                <Rectangle Width="4"
+                                           Height="14"
+                                           Fill="White"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Canvas.Left="10"
+                                           Canvas.Top="5"/>
+                            </Canvas>
+                        </Viewbox>
+                    </Button>
 
                     <!-- Placeholder for future: export / refresh -->
 
 
-                    <!-- Admin toggle placeholder (wired in Step 7+) -->
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Admin Mode"
-                                   Foreground="{StaticResource TextMutedBrush}"
-                                   FontSize="11"
-                                   VerticalAlignment="Center" />
-                        <CheckBox x:Name="AdminModeCheckBox"
-                                  Margin="10,0,0,0"
-                                  VerticalAlignment="Center"
-                                  IsEnabled="False"
-                                  ToolTip="Admin mode is implemented in the next step (explicit confirmation, audit log)." />
-                    </StackPanel>
+                    <!-- Removed Admin Mode toggle -->
                 </StackPanel>
             </Grid>
         </Border>
@@ -421,37 +618,41 @@
         <!-- ===================== MAIN LAYOUT ===================== -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3.2*" />
-                <ColumnDefinition Width="1.8*" />
+                <ColumnDefinition Width="3.2*"/>
+                <ColumnDefinition Width="1.8*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- ===================== LEFT: DATA (TABS) ===================== -->
-            <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,14,0">
+            <Border Grid.Column="0"
+                    Style="{StaticResource Card}"
+                    Margin="0,0,14,0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <!-- Tabs header -->
-                    <DockPanel Grid.Row="0" Style="{StaticResource CardHeaderRow}">
+                    <DockPanel Grid.Row="0"
+                               Style="{StaticResource CardHeaderRow}">
                         <TextBlock Text="Data"
                                    Style="{StaticResource H2}"
-                                   DockPanel.Dock="Left" />
+                                   DockPanel.Dock="Left"/>
 
-                        
+
                     </DockPanel>
 
                     <!-- Filters row -->
-                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                    <Grid Grid.Row="1"
+                          Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- Search box placeholder (wire in MVVM later) -->
@@ -460,25 +661,36 @@
                                  Grid.Column="0"
                                  Text=""
                                  ToolTip="Type to filter users/events by username or reason."
-                                 TextChanged="FilterTextBox_TextChanged" />
+                                 TextChanged="FilterTextBox_TextChanged"/>
                         <!-- Note: PlaceholderText is not native WPF; keeping empty to avoid errors -->
                     </Grid>
 
                     <!-- TabControl -->
-                    <TabControl Grid.Row="2" Style="{StaticResource ModernTabControl}">
+                    <TabControl Grid.Row="2"
+                                Style="{StaticResource ModernTabControl}">
                         <TabControl.Resources>
                             <Style TargetType="TabPanel">
-                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                <Setter Property="Margin" Value="0" />
-                                <Setter Property="IsItemsHost" Value="True" />
-                                <Setter Property="Height" Value="48" />
+                                <Setter Property="Height"
+                                        Value="48"/>
+                                <Setter Property="HorizontalAlignment"
+                                        Value="Left"/>
                             </Style>
                         </TabControl.Resources>
+
+                        <!-- This creates the spacing reliably -->
+                        <TabControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </TabControl.ItemsPanel>
+
                         <TabControl.ItemContainerStyle>
-                            <Style TargetType="TabItem" BasedOn="{StaticResource ModernTabItem}">
-                                <Setter Property="MinWidth" Value="80" />
-                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                <Setter Property="Margin" Value="0,0,0,0" />
+                            <Style TargetType="TabItem"
+                                   BasedOn="{StaticResource ModernTabItem}">
+                                <Setter Property="MinWidth"
+                                        Value="100"/>
+                                <Setter Property="Padding"
+                                        Value="30,10"/>
                             </Style>
                         </TabControl.ItemContainerStyle>
 
@@ -486,13 +698,13 @@
                         <TabItem Header="Users">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
                                 <DockPanel Margin="0,0,0,10">
-                                    <TextBlock Text="Users table (read-only)"
-                                               Style="{StaticResource Caption}" />
+                                    <TextBlock Text="Users table"
+                                               Style="{StaticResource Caption}"/>
                                 </DockPanel>
 
                                 <DataGrid x:Name="UsersDataGrid"
@@ -501,12 +713,93 @@
                                           RowStyle="{StaticResource UsersRowStyle}"
                                           AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*" />
-                                        <DataGridTextColumn Header="Failed Attempts" Binding="{Binding FailedAttempts}"
-                                                            Width="150" />
-                                        <DataGridCheckBoxColumn Header="Locked" Binding="{Binding Locked}" Width="90" />
-                                        <DataGridTextColumn Header="Created At" Binding="{Binding CreatedAt}"
-                                                            Width="180" />
+                                        <DataGridTextColumn Header="Username"
+                                                            Binding="{Binding Username}"
+                                                            Width="100"
+                                                            ElementStyle="{StaticResource Body}"/>
+                                        <DataGridTextColumn Header="Failed Attempts"
+                                                            Binding="{Binding FailedAttempts}"
+                                                            Width="120"
+                                                            ElementStyle="{StaticResource Body}"/>
+                                        <DataGridTemplateColumn Header="Locked"
+                                                                Width="80">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding Locked}"
+                                                              IsEnabled="False"
+                                                              VerticalAlignment="Center"
+                                                              HorizontalAlignment="Center"
+                                                              Width="16"
+                                                              Height="16">
+                                                        <CheckBox.Style>
+                                                            <Style TargetType="CheckBox">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="CheckBox">
+                                                                            <Grid>
+                                                                                <Border x:Name="Box"
+                                                                                        Width="16"
+                                                                                        Height="16"
+                                                                                        CornerRadius="3"
+                                                                                        Background="#263255"
+                                                                                        BorderBrush="#19203A"
+                                                                                        BorderThickness="1.5"/>
+                                                                                <Path x:Name="CheckMark"
+                                                                                      Data="M4,9 L7,12 L12,5"
+                                                                                      Stroke="White"
+                                                                                      StrokeThickness="2"
+                                                                                      StrokeEndLineCap="Round"
+                                                                                      StrokeStartLineCap="Round"
+                                                                                      Visibility="Hidden"/>
+                                                                            </Grid>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsChecked"
+                                                                                         Value="True">
+                                                                                    <Setter TargetName="Box"
+                                                                                            Property="Background"
+                                                                                            Value="#34D399"/>
+                                                                                    <Setter TargetName="CheckMark"
+                                                                                            Property="Visibility"
+                                                                                            Value="Visible"/>
+                                                                                </Trigger>
+                                                                                <Trigger Property="IsChecked"
+                                                                                         Value="False">
+                                                                                    <Setter TargetName="Box"
+                                                                                            Property="Background"
+                                                                                            Value="#263255"/>
+                                                                                    <Setter TargetName="CheckMark"
+                                                                                            Property="Visibility"
+                                                                                            Value="Hidden"/>
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </CheckBox.Style>
+                                                    </CheckBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Created At"
+                                                            Binding="{Binding CreatedAt}"
+                                                            Width="170"
+                                                            ElementStyle="{StaticResource Caption}"/>
+                                        <DataGridTemplateColumn Header="Unlock"
+                                                                Width="110">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="Unlock"
+                                                            IsEnabled="{Binding Locked}"
+                                                            Click="UnlockUser_Click"
+                                                            Style="{StaticResource PrimaryButton}"
+                                                            Padding="8,2"
+                                                            FontSize="13"
+                                                            HorizontalAlignment="Center"
+                                                            MinWidth="70"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
@@ -516,13 +809,13 @@
                         <TabItem Header="Login Events">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
                                 <DockPanel Margin="0,0,0,10">
                                     <TextBlock Text="Authentication timeline (read-only)"
-                                               Style="{StaticResource Caption}" />
+                                               Style="{StaticResource Caption}"/>
                                 </DockPanel>
 
                                 <DataGrid x:Name="LoginEventsDataGrid"
@@ -531,12 +824,82 @@
                                           RowStyle="{StaticResource LoginEventsRowStyle}"
                                           AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*" />
-                                        <DataGridCheckBoxColumn Header="Success" Binding="{Binding Success}" Width="90" />
-                                        <DataGridTextColumn Header="Mode" Binding="{Binding Mode}" Width="120" />
-                                        <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" Width="260" />
-                                        <DataGridTextColumn Header="Timestamp (UTC)" Binding="{Binding OccurredAt}"
-                                                            Width="190" />
+                                        <DataGridTextColumn Header="Username"
+                                                            Binding="{Binding Username}"
+                                                            Width="2*"
+                                                            ElementStyle="{StaticResource Body}"/>
+                                        <DataGridTemplateColumn Header="Success"
+                                                                Width="80">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding Success}"
+                                                              IsEnabled="False"
+                                                              VerticalAlignment="Center"
+                                                              HorizontalAlignment="Center"
+                                                              Width="16"
+                                                              Height="16">
+                                                        <CheckBox.Style>
+                                                            <Style TargetType="CheckBox">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="CheckBox">
+                                                                            <Grid>
+                                                                                <Border x:Name="Box"
+                                                                                        Width="16"
+                                                                                        Height="16"
+                                                                                        CornerRadius="3"
+                                                                                        Background="#263255"
+                                                                                        BorderBrush="#19203A"
+                                                                                        BorderThickness="1.5"/>
+                                                                                <Path x:Name="CheckMark"
+                                                                                      Data="M4,9 L7,12 L12,5"
+                                                                                      Stroke="White"
+                                                                                      StrokeThickness="2"
+                                                                                      StrokeEndLineCap="Round"
+                                                                                      StrokeStartLineCap="Round"
+                                                                                      Visibility="Hidden"/>
+                                                                            </Grid>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsChecked"
+                                                                                         Value="True">
+                                                                                    <Setter TargetName="Box"
+                                                                                            Property="Background"
+                                                                                            Value="#34D399"/>
+                                                                                    <Setter TargetName="CheckMark"
+                                                                                            Property="Visibility"
+                                                                                            Value="Visible"/>
+                                                                                </Trigger>
+                                                                                <Trigger Property="IsChecked"
+                                                                                         Value="False">
+                                                                                    <Setter TargetName="Box"
+                                                                                            Property="Background"
+                                                                                            Value="#263255"/>
+                                                                                    <Setter TargetName="CheckMark"
+                                                                                            Property="Visibility"
+                                                                                            Value="Hidden"/>
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </CheckBox.Style>
+                                                    </CheckBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Mode"
+                                                            Binding="{Binding Mode}"
+                                                            Width="110"
+                                                            ElementStyle="{StaticResource Caption}"/>
+                                        <DataGridTextColumn Header="Reason"
+                                                            Binding="{Binding Reason}"
+                                                            Width="220"
+                                                            ElementStyle="{StaticResource Body}"/>
+                                        <DataGridTextColumn Header="Timestamp (UTC)"
+                                                            Binding="{Binding OccurredAt}"
+                                                            Width="170"
+                                                            ElementStyle="{StaticResource Caption}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
@@ -547,25 +910,28 @@
             </Border>
 
             <!-- ===================== RIGHT: SECURITY INSIGHTS ===================== -->
-            <StackPanel Grid.Column="1" Orientation="Vertical">
+            <StackPanel Grid.Column="1"
+                        Orientation="Vertical">
 
                 <!-- ===================== SECURITY INSIGHTS ===================== -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <Border Style="{StaticResource Card}"
+                        Margin="0,0,0,14">
                     <StackPanel>
 
                         <!-- Header -->
                         <DockPanel Style="{StaticResource CardHeaderRow}">
                             <TextBlock Text="Security Insights"
-                                       Style="{StaticResource H2}" />
+                                       Style="{StaticResource H2}"/>
 
-                           
+
                         </DockPanel>
 
                         <!-- Content -->
                         <StackPanel>
 
                             <!-- KPI tiles -->
-                            <UniformGrid Columns="2" Margin="0,4,0,0">
+                            <UniformGrid Columns="2"
+                                         Margin="0,4,0,0">
 
                                 <Border Style="{StaticResource Card}"
                                         Background="{StaticResource Surface2}"
@@ -574,12 +940,12 @@
                                         Margin="0,0,10,10">
                                     <StackPanel>
                                         <TextBlock Text="Total Users"
-                                                   Style="{StaticResource Caption}" />
+                                                   Style="{StaticResource Caption}"/>
                                         <TextBlock x:Name="TotalUsersText"
                                                    Text="—"
                                                    Foreground="{StaticResource TextBrush}"
                                                    FontSize="20"
-                                                   FontWeight="SemiBold" />
+                                                   FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </Border>
 
@@ -590,12 +956,12 @@
                                         Margin="0,0,0,10">
                                     <StackPanel>
                                         <TextBlock Text="Locked Users"
-                                                   Style="{StaticResource Caption}" />
+                                                   Style="{StaticResource Caption}"/>
                                         <TextBlock x:Name="LockedUsersText"
                                                    Text="—"
                                                    Foreground="{StaticResource DangerBrush}"
                                                    FontSize="20"
-                                                   FontWeight="SemiBold" />
+                                                   FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </Border>
 
@@ -605,13 +971,13 @@
                                         Padding="12"
                                         Margin="0,0,10,0">
                                     <StackPanel>
-                                        <TextBlock Text="High-Risk Users"
-                                                   Style="{StaticResource Caption}" />
+                                        <TextBlock Text="High-Risk Logins"
+                                                   Style="{StaticResource Caption}"/>
                                         <TextBlock x:Name="HighRiskUsersText"
                                                    Text="—"
                                                    Foreground="{StaticResource WarnBrush}"
                                                    FontSize="20"
-                                                   FontWeight="SemiBold" />
+                                                   FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </Border>
 
@@ -621,45 +987,45 @@
                                         Padding="12">
                                     <StackPanel>
                                         <TextBlock Text="Analyzer Mode"
-                                                   Style="{StaticResource Caption}" />
-                                        <TextBlock Text="READ-ONLY"
+                                                   Style="{StaticResource Caption}"/>
+                                        <TextBlock Text="ADMIN"
                                                    Foreground="{StaticResource OkBrush}"
                                                    FontSize="20"
-                                                   FontWeight="SemiBold" />
+                                                   FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </Border>
 
                             </UniformGrid>
 
                             <Separator Margin="0,14"
-                                       Background="{StaticResource BorderBrush}" />
+                                       Background="{StaticResource BorderBrush}"/>
 
                             <!-- Notes -->
                             <TextBlock Text="What to look for"
                                        Style="{StaticResource H2}"
-                                       Margin="0,0,0,8" />
+                                       Margin="0,0,0,8"/>
 
                             <StackPanel>
                                 <TextBlock Text="• Locked accounts can indicate sustained brute-force attempts."
                                            Style="{StaticResource Body}"
                                            TextWrapping="Wrap"
-                                           Margin="0,0,0,6" />
+                                           Margin="0,0,0,6"/>
 
                                 <TextBlock Text="• High failed_attempts deserve review (possible password spraying)."
                                            Style="{StaticResource Body}"
                                            TextWrapping="Wrap"
-                                           Margin="0,0,0,6" />
+                                           Margin="0,0,0,6"/>
 
                                 <TextBlock
                                     Text="• Demo logins or 'sql_injection_possible' events indicate testing activity (educational/demo mode)."
                                     Style="{StaticResource Body}"
                                     TextWrapping="Wrap"
-                                    Margin="0,0,0,6" />
+                                    Margin="0,0,0,6"/>
 
                                 <TextBlock
                                     Text="• Use Admin Mode only to unlock users or reset failed attempts (audit logged)."
                                     Style="{StaticResource Body}"
-                                    TextWrapping="Wrap" />
+                                    TextWrapping="Wrap"/>
                             </StackPanel>
 
                         </StackPanel>
@@ -674,49 +1040,52 @@
                         <!-- Header -->
                         <DockPanel Style="{StaticResource CardHeaderRow}">
                             <TextBlock Text="Legend"
-                                       Style="{StaticResource H2}" />
+                                       Style="{StaticResource H2}"/>
                         </DockPanel>
 
                         <!-- Content -->
                         <StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,0,0,8">
                                 <Border Width="16"
                                         Height="16"
                                         Background="{StaticResource TintLocked}"
                                         CornerRadius="4"
                                         BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1" />
+                                        BorderThickness="1"/>
                                 <TextBlock Text=" Locked user row"
                                            Style="{StaticResource Body}"
                                            Margin="10,0,0,0"
-                                           VerticalAlignment="Center" />
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,0,0,8">
                                 <Border Width="16"
                                         Height="16"
                                         Background="{StaticResource TintWarn}"
                                         CornerRadius="4"
                                         BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1" />
+                                        BorderThickness="1"/>
                                 <TextBlock Text=" High-risk / suspicious indicator"
                                            Style="{StaticResource Body}"
                                            Margin="10,0,0,0"
-                                           VerticalAlignment="Center" />
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,0,0,8">
                                 <Border Width="16"
                                         Height="16"
                                         Background="{StaticResource TintFail}"
                                         CornerRadius="4"
                                         BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1" />
+                                        BorderThickness="1"/>
                                 <TextBlock Text=" Failed login event"
                                            Style="{StaticResource Body}"
                                            Margin="10,0,0,0"
-                                           VerticalAlignment="Center" />
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
@@ -725,11 +1094,11 @@
                                         Background="{StaticResource TintDemo}"
                                         CornerRadius="4"
                                         BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1" />
+                                        BorderThickness="1"/>
                                 <TextBlock Text=" Demo mode event"
                                            Style="{StaticResource Body}"
                                            Margin="10,0,0,0"
-                                           VerticalAlignment="Center" />
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
                         </StackPanel>
