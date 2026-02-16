@@ -16,7 +16,7 @@ public partial class MainWindow : Window
 {
     private List<UserRecord> _allUsers = new();
     private List<LoginEventRecord> _allLoginEvents = new();
-    private string _lastDatabasePath = null;
+    private string? _lastDatabasePath;
 
     private void MarkHighRiskUsers()
     {
